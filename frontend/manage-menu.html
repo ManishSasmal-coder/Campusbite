@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Menu - CampusBite</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .sidebar { float: left; width: 22%; padding-right: 2rem; }
+        .main-content { float: left; width: 78%; }
+        .sidebar a { display: block; padding: 1rem; margin-bottom: 0.5rem; background: var(--secondary-color); text-decoration: none; color: var(--text-color); border-radius: var(--border-radius); box-shadow: var(--shadow); }
+        .sidebar a:hover { background: var(--primary-color); color: white; }
+        table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+        th, td { padding: 1rem; text-align: left; border-bottom: 1px solid #ddd; }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="admin-dashboard.html" class="logo">CampusBite Admin</a>
+        <div>
+            <button onclick="logout()" class="btn-primary">Logout</button>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="sidebar">
+            <a href="admin-dashboard.html">Dashboard</a>
+            <a href="manage-chefs.html">Manage Chefs</a>
+            <a href="manage-menu.html" style="background: var(--primary-color); color: white;">Manage Menu</a>
+            <a href="view-orders.html">View All Orders</a>
+        </div>
+        <div class="main-content">
+            <h1 style="color: var(--primary-color); margin-bottom: 2rem;">Manage Menu</h1>
+            
+            <div class="card">
+                <h3>Add Menu Item</h3><br>
+                <form id="addMenuForm">
+                    <input type="text" id="menuName" placeholder="Item Name" required>
+                    <input type="text" id="menuDesc" placeholder="Description" required>
+                    <input type="number" id="menuPrice" placeholder="Price" step="0.01" required>
+                    <select id="menuType">
+                        <option value="Veg">Veg</option>
+                        <option value="Non-Veg">Non-Veg</option>
+                    </select>
+                    <input type="text" id="menuImage" placeholder="Image URL (Optional)">
+                    <button type="submit" class="btn-primary">Add Item</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h3>Current Menu Items</h3>
+                <div id="menuListAdmin"></div>
+            </div>
+        </div>
+    </div>
+    <script src="js/auth.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>

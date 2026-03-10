@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart - CampusBite</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        table { width: 100%; border-collapse: collapse; margin-bottom: 2rem; }
+        th, td { padding: 1rem; text-align: left; border-bottom: 1px solid #ddd; }
+        .cart-summary { text-align: right; margin-top: 2rem; }
+        .qty-btn { background: #eee; border: none; padding: 0.5rem; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="student-dashboard.html" class="logo">CampusBite</a>
+        <div>
+            <a href="menu.html">Menu</a>
+            <a href="cart.html">Cart (<span id="cartCount">0</span>)</a>
+            <button onclick="logout()" class="btn-primary">Logout</button>
+        </div>
+    </nav>
+    <div class="container">
+        <h1 style="color: var(--primary-color); margin-bottom: 2rem;">Your Cart</h1>
+        <div class="card">
+            <div id="cartContent"></div>
+            <div class="cart-summary" id="cartSummary" style="display:none;">
+                <h3>Total: Rs<span id="cartTotal">0.00</span></h3>
+                <br>
+                <button class="btn-primary" onclick="checkout()" style="padding: 1rem 2rem; font-size: 1.1rem;">Place Order</button>
+            </div>
+        </div>
+    </div>
+    <script src="js/auth.js"></script>
+    <script src="js/cart.js"></script>
+</body>
+</html>

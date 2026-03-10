@@ -1,0 +1,171 @@
+var API_URL = "http://localhost:8082/api";
+
+document.addEventListener("DOMContentLoaded", () => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    if(!user || user.role !== 'ADMIN') {
+        window.location.href = 'login.html';
+        return;
+    }
+
+    const path = window.location.pathname;
+
+    if(path.includes("manage-chefs.html")) {
+        loadChefs();
+        document.getElementById('addChefForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('chefUsername').value;
+            const fullName = document.getElementById('chefFullName').value;
+            const password = document.getElementById('chefPassword').value;
+
+            try {
+                const res = await fetch(`${API_URL}/admin/chefs?adminId=${user.userId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, fullName, password })
+                });
+                if(res.ok) {
+                    alert('Chef added successfully!');
+                    loadChefs();
+                    document.getElementById('addChefForm').reset();
+                } else alert('Failed to add chef.');
+            } catch(err) { console.error(err); }
+        });
+    }
+
+    if(path.includes("manage-menu.html")) {
+        loadMenuAdmin();
+        document.getElementById('addMenuForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('menuName').value;
+            const description = document.getElementById('menuDesc').value;
+            const price = parseFloat(document.getElementById('menuPrice').value);
+            const type = document.getElementById('menuType').value;
+            const imageUrl = document.getElementById('menuImage').value;
+
+            try {
+                const res = await fetch(`${API_URL}/menu`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, description, price, type, imageUrl })
+                });
+                if(res.ok) {
+                    alert('Menu item added successfully!');
+                    loadMenuAdmin();
+                    document.getElementById('addMenuForm').reset();
+                } else alert('Failed to add menu item.');
+            } catch(err) { console.error(err); }
+        });
+    }
+
+    if(path.includes("view-orders.html")) {
+        loadAllOrders();
+        // polling
+        setInterval(loadAllOrders, 10000);
+    }
+});
+
+async function loadChefs() {
+    try {
+        const res = await fetch(`${API_URL}/admin/chefs`);
+        if(res.ok) {
+            const chefs = await res.json();
+            const container = document.getElementById('chefsList');
+            if(chefs.length === 0) {
+                container.innerHTML = '<p>No chefs found.</p>';
+                return;
+            }
+            container.innerHTML = `<table>
+                <thead><tr><th>ID</th><th>Username</th><th>Full Name</th><th>Action</th></tr></thead>
+                <tbody>
+                    ${chefs.map(chef => `<tr>
+                        <td>${chef.chefId}</td>
+                        <td>${chef.username}</td>
+                        <td>${chef.fullName}</td>
+                        <td><button class="btn-primary" style="background:#dc3545;" onclick="deleteChef(${chef.chefId})">Delete</button></td>
+                    </tr>`).join('')}
+                </tbody>
+            </table>`;
+        }
+    } catch(err) { console.error(err); }
+}
+
+async function deleteChef(id) {
+    if(!confirm("Are you sure you want to delete this chef?")) return;
+    try {
+        const res = await fetch(`${API_URL}/admin/chefs/${id}`, { method: 'DELETE' });
+        if(res.ok) {
+            loadChefs();
+        } else alert("Failed to delete chef.");
+    } catch(err) { console.error(err); }
+}
+
+async function loadMenuAdmin() {
+    try {
+        const res = await fetch(`${API_URL}/menu`);
+        if(res.ok) {
+            const items = await res.json();
+            const container = document.getElementById('menuListAdmin');
+            if(items.length === 0) {
+                container.innerHTML = '<p>No menu items found.</p>';
+                return;
+            }
+            container.innerHTML = `<table>
+                <thead><tr><th>ID</th><th>Name</th><th>Price</th><th>Type</th><th>Action</th></tr></thead>
+                <tbody>
+                    ${items.map(m => `<tr>
+                        <td>${m.menuItemId}</td>
+                        <td>${m.name}</td>
+                        <td>$${m.price.toFixed(2)}</td>
+                        <td>${m.type}</td>
+                        <td><button class="btn-primary" style="background:#dc3545;" onclick="deleteMenu(${m.menuItemId})">Delete</button></td>
+                    </tr>`).join('')}
+                </tbody>
+            </table>`;
+        }
+    } catch(err) { console.error(err); }
+}
+
+async function deleteMenu(id) {
+    if(!confirm("Are you sure you want to delete this item?")) return;
+    try {
+        const res = await fetch(`${API_URL}/menu/${id}`, { method: 'DELETE' });
+        if(res.ok) {
+            loadMenuAdmin();
+        } else alert("Failed to delete item.");
+    } catch(err) { console.error(err); }
+}
+
+async function loadAllOrders() {
+    try {
+        const res = await fetch(`${API_URL}/orders`);
+        if(res.ok) {
+            const orders = await res.json();
+            const container = document.getElementById('allOrdersList');
+            
+            const newDataString = JSON.stringify(orders);
+            if (newDataString === window.lastAdminOrdersData) return;
+            window.lastAdminOrdersData = newDataString;
+
+            if(orders.length === 0) {
+                container.innerHTML = '<p>No orders found.</p>';
+                return;
+            }
+            container.innerHTML = `<table>
+                <thead><tr><th>ID</th><th>User</th><th>Total</th><th>Status</th><th>Items</th></tr></thead>
+                <tbody>
+                    ${orders.map(o => `<tr>
+                        <td>${o.orderId}</td>
+                        <td>${o.user ? o.user.username : 'Unknown'}</td>
+                        <td>$${o.totalAmount.toFixed(2)}</td>
+                        <td><strong style="color:var(--primary-color)">${o.status}</strong></td>
+                        <td>
+                            <ul style="margin-left: 1rem;">
+                                ${o.orderItems.map(i => `<li>${i.quantity}x ${i.item_name}</li>`).join('')}
+                            </ul>
+                        </td>
+                    </tr>`).join('')}
+                </tbody>
+            </table>`;
+        }
+    } catch(err) { console.error(err); }
+}

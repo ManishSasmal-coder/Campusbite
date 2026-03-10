@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chef Dashboard - CampusBite</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .sidebar { float: left; width: 20%; padding-right: 2rem; }
+        .main-content { float: left; width: 80%; }
+        .sidebar a { display: block; padding: 1rem; margin-bottom: 0.5rem; background: var(--secondary-color); text-decoration: none; color: var(--text-color); border-radius: var(--border-radius); box-shadow: var(--shadow); }
+        .sidebar a:hover { background: var(--primary-color); color: white; }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="chef-dashboard.html" class="logo">CampusBite Chef</a>
+        <div>
+            <span id="chefNameDisplay" style="margin-right: 15px;"></span>
+            <button onclick="logout()" class="btn-primary">Logout</button>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="sidebar">
+            <a href="chef-dashboard.html" style="background: var(--primary-color); color: white;">Dashboard</a>
+            <a href="chef-orders.html">Manage Orders</a>
+        </div>
+        <div class="main-content">
+            <h1 style="color: var(--primary-color); margin-bottom: 2rem;">🧑‍🍳 Chef Dashboard</h1>
+            <div class="grid">
+                <div class="card" style="text-align: center; border: 2px solid var(--primary-color);">
+                    <h1 style="font-size: 3rem; margin-bottom: 0.5rem;">🍽️</h1>
+                    <h3>Incoming Orders</h3>
+                    <p style="color: #64748b; margin-bottom: 1rem;">View and manage all active orders.</p>
+                    <a href="chef-orders.html" class="btn-primary" style="width:100%;">Go to Orders</a>
+                </div>
+                <div class="card" style="text-align: center;">
+                    <h1 style="font-size: 3rem; margin-bottom: 0.5rem;">✅</h1>
+                    <h3>Total Completed</h3>
+                    <p style="color: #64748b; margin-bottom: 1rem;">Orders completed by you.</p>
+                    <h2 id="chefCompletedStat" style="color: var(--primary-color); font-size: 2.5rem;">0</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="js/auth.js"></script>
+    <script>
+        const user = JSON.parse(localStorage.getItem('user'));
+        if(!user || user.role !== 'CHEF') {
+            window.location.href = 'login.html';
+        } else {
+            document.getElementById('chefNameDisplay').innerText = `Chef ${user.username}`;
+            
+            fetch(`http://localhost:8082/api/orders/chef/${user.userId}`)
+                .then(res => res.json())
+                .then(orders => {
+                    const completed = orders.filter(o => o.status === 'COLLECTED').length;
+                    document.getElementById('chefCompletedStat').innerText = completed;
+                })
+                .catch(err => console.error(err));
+        }
+    </script>
+</body>
+</html>
