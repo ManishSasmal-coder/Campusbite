@@ -1,20 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chef Dashboard - CampusBite</title>
+    <title>Chef Dashboard - CanteenAdda</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
-        .sidebar { float: left; width: 20%; padding-right: 2rem; }
-        .main-content { float: left; width: 80%; }
-        .sidebar a { display: block; padding: 1rem; margin-bottom: 0.5rem; background: var(--secondary-color); text-decoration: none; color: var(--text-color); border-radius: var(--border-radius); box-shadow: var(--shadow); }
-        .sidebar a:hover { background: var(--primary-color); color: white; }
+        .sidebar {
+            float: left;
+            width: 20%;
+            padding-right: 2rem;
+        }
+
+        .main-content {
+            float: left;
+            width: 80%;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            background: var(--secondary-color);
+            text-decoration: none;
+            color: var(--text-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        .sidebar a:hover {
+            background: var(--primary-color);
+            color: white;
+        }
     </style>
 </head>
+
 <body>
     <nav>
-        <a href="chef-dashboard.html" class="logo">CampusBite Chef</a>
+        <a href="chef-dashboard.html" class="logo">CanteenAdda Chef</a>
         <div>
             <span id="chefNameDisplay" style="margin-right: 15px;"></span>
             <button onclick="logout()" class="btn-primary">Logout</button>
@@ -46,11 +70,11 @@
     <script src="js/auth.js"></script>
     <script>
         const user = JSON.parse(localStorage.getItem('user'));
-        if(!user || user.role !== 'CHEF') {
-            window.location.href = 'login.html';
+        if (!user || user.role !== 'CHEF') {
+            window.location.href = 'chef-login.html';
         } else {
             document.getElementById('chefNameDisplay').innerText = `Chef ${user.username}`;
-            
+
             fetch(`http://localhost:8082/api/orders/chef/${user.userId}`)
                 .then(res => res.json())
                 .then(orders => {
@@ -61,4 +85,5 @@
         }
     </script>
 </body>
+
 </html>

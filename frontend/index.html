@@ -1,24 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CampusBite - Canteen Pre-order System</title>
+    <title>CanteenAdda - Canteen Pre-order System</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
     <nav>
-        <a href="index.html" class="logo">CampusBite</a>
-        <div>
-            <a href="login.html">Login</a>
-            <a href="signup.html" class="btn-primary">Sign Up</a>
+        <a href="index.html" class="logo">
+            <span style="font-size: 2.2rem; margin-right: 5px;">🍔</span>
+            CanteenAdda
+        </a>
+        <div class="nav-links" style="display: flex; gap: 1rem; align-items: center;">
+            <a href="student-login.html" class="nav-link" style="color: var(--text-color); font-weight: 600;">Student
+                Login</a>
+            <a href="chef-login.html" class="nav-link" style="color: var(--text-color); font-weight: 600;">Chef
+                Login</a>
+            <a href="admin-login.html" class="nav-link" style="color: var(--text-color); font-weight: 600;">Admin
+                Login</a>
+            <a href="signup.html" class="btn-primary" style="margin-left: 10px;">Sign Up</a>
         </div>
     </nav>
-    <div class="hero container">
-        <h1>Smart College Canteen Ordering</h1>
-        <p>Skip the line. Order ahead and pick up your meal when it's ready.</p>
-        <br><br>
-        <a href="signup.html" class="btn-primary" style="font-size: 1.2rem; padding: 1rem 2rem;">Get Started</a>
+
+    <div class="hero-section container">
+        <div class="hero-content">
+            <h1 class="animate-fade-up">Smart College Canteen <span class="highlight-text">Ordering</span></h1>
+            <p class="animate-fade-up delay-1">Order ahead. Skip the queue. Enjoy fresh food.</p>
+            <div class="hero-buttons animate-fade-up delay-2"
+                style="display: flex; justify-content: center; margin-top: 2rem;">
+                <a href="signup.html" class="btn-primary"
+                    style="font-size: 1.25rem; padding: 1rem 3rem; border-radius: 50px; box-shadow: 0 10px 25px rgba(249, 115, 22, 0.4);">Get
+                    Started</a>
+            </div>
+        </div>
     </div>
+
+    <div class="features-section container">
+        <div class="grid features-grid">
+            <div class="feature-card animate-fade-up delay-1">
+                <div class="feature-icon">🚀</div>
+                <h3>Lightning Fast</h3>
+                <p>No more waiting in lines. Your food is ready the minute you arrive at the counter.</p>
+            </div>
+            <div class="feature-card animate-fade-up delay-2">
+                <div class="feature-icon">💳</div>
+                <h3>Easy Tracking</h3>
+                <p>Track your orders in real-time, from kitchen preparation to pickup.</p>
+            </div>
+            <div class="feature-card animate-fade-up delay-3">
+                <div class="feature-icon">✨</div>
+                <h3>Fresh & Hot</h3>
+                <p>Enjoy meals precisely when they're fresh out of the kitchen. Pure deliciousness.</p>
+            </div>
+        </div>
+    </div>
+
 </body>
+
 </html>

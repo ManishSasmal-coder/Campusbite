@@ -1,20 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - CampusBite</title>
+    <title>Admin Dashboard - CanteenAdda</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
-        .sidebar { float: left; width: 22%; padding-right: 2rem; }
-        .main-content { float: left; width: 78%; }
-        .sidebar a { display: block; padding: 1rem; margin-bottom: 0.5rem; background: var(--secondary-color); text-decoration: none; color: var(--text-color); border-radius: var(--border-radius); box-shadow: var(--shadow); }
-        .sidebar a:hover { background: var(--primary-color); color: white; }
+        .sidebar {
+            float: left;
+            width: 22%;
+            padding-right: 2rem;
+        }
+
+        .main-content {
+            float: left;
+            width: 78%;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            background: var(--secondary-color);
+            text-decoration: none;
+            color: var(--text-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        .sidebar a:hover {
+            background: var(--primary-color);
+            color: white;
+        }
     </style>
 </head>
+
 <body>
     <nav>
-        <a href="admin-dashboard.html" class="logo">CampusBite Admin</a>
+        <a href="admin-dashboard.html" class="logo">CanteenAdda Admin</a>
         <div>
             <span id="adminNameDisplay" style="margin-right: 15px;"></span>
             <button onclick="logout()" class="btn-primary">Logout</button>
@@ -33,12 +57,14 @@
                 <div class="card" style="text-align: center; border: 2px solid var(--primary-color);">
                     <h1 style="font-size: 3rem; margin-bottom: 0.5rem;">📅</h1>
                     <h3>Today's Revenue</h3>
-                    <h2 id="dailyRevenue" style="color: var(--primary-color); font-size: 2.5rem; margin: 0.5rem 0;">Loading...</h2>
+                    <h2 id="dailyRevenue" style="color: var(--primary-color); font-size: 2.5rem; margin: 0.5rem 0;">
+                        Loading...</h2>
                 </div>
                 <div class="card" style="text-align: center; border: 2px solid var(--primary-color);">
                     <h1 style="font-size: 3rem; margin-bottom: 0.5rem;">📈</h1>
                     <h3>Monthly Revenue</h3>
-                    <h2 id="monthlyRevenue" style="color: var(--primary-color); font-size: 2.5rem; margin: 0.5rem 0;">Loading...</h2>
+                    <h2 id="monthlyRevenue" style="color: var(--primary-color); font-size: 2.5rem; margin: 0.5rem 0;">
+                        Loading...</h2>
                 </div>
             </div>
             <div class="grid">
@@ -66,11 +92,11 @@
     <script src="js/auth.js"></script>
     <script>
         const user = JSON.parse(localStorage.getItem('user'));
-        if(!user || user.role !== 'ADMIN') {
-            window.location.href = 'login.html';
+        if (!user || user.role !== 'ADMIN') {
+            window.location.href = 'admin-login.html';
         } else {
             document.getElementById('adminNameDisplay').innerText = `Admin: ${user.username}`;
-            
+
             // Calculate revenues
             fetch(`http://localhost:8082/api/orders`)
                 .then(res => res.json())
@@ -79,10 +105,10 @@
                     const currentMonth = now.getMonth();
                     const currentYear = now.getFullYear();
                     const currentDate = now.getDate();
-                    
+
                     let daily = 0;
                     let monthly = 0;
-                    
+
                     orders.forEach(o => {
                         if (o.status === 'COLLECTED') {
                             const d = new Date(o.createdAt);
@@ -94,12 +120,13 @@
                             }
                         }
                     });
-                    
-                    document.getElementById('dailyRevenue').innerText = `$${daily.toFixed(2)}`;
-                    document.getElementById('monthlyRevenue').innerText = `$${monthly.toFixed(2)}`;
+
+                    document.getElementById('dailyRevenue').innerText = `₹${daily.toFixed(2)}`;
+                    document.getElementById('monthlyRevenue').innerText = `₹${monthly.toFixed(2)}`;
                 })
                 .catch(err => console.error(err));
         }
     </script>
 </body>
+
 </html>

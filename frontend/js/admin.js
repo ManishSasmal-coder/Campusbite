@@ -2,14 +2,14 @@ var API_URL = "http://localhost:8082/api";
 
 document.addEventListener("DOMContentLoaded", () => {
     const user = JSON.parse(localStorage.getItem('user'));
-    if(!user || user.role !== 'ADMIN') {
-        window.location.href = 'login.html';
+    if (!user || user.role !== 'ADMIN') {
+        window.location.href = 'admin-login.html';
         return;
     }
 
     const path = window.location.pathname;
 
-    if(path.includes("manage-chefs.html")) {
+    if (path.includes("manage-chefs.html")) {
         loadChefs();
         document.getElementById('addChefForm').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -23,16 +23,16 @@ document.addEventListener("DOMContentLoaded", () => {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username, fullName, password })
                 });
-                if(res.ok) {
+                if (res.ok) {
                     alert('Chef added successfully!');
                     loadChefs();
                     document.getElementById('addChefForm').reset();
                 } else alert('Failed to add chef.');
-            } catch(err) { console.error(err); }
+            } catch (err) { console.error(err); }
         });
     }
 
-    if(path.includes("manage-menu.html")) {
+    if (path.includes("manage-menu.html")) {
         loadMenuAdmin();
         document.getElementById('addMenuForm').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -48,16 +48,16 @@ document.addEventListener("DOMContentLoaded", () => {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name, description, price, type, imageUrl })
                 });
-                if(res.ok) {
+                if (res.ok) {
                     alert('Menu item added successfully!');
                     loadMenuAdmin();
                     document.getElementById('addMenuForm').reset();
                 } else alert('Failed to add menu item.');
-            } catch(err) { console.error(err); }
+            } catch (err) { console.error(err); }
         });
     }
 
-    if(path.includes("view-orders.html")) {
+    if (path.includes("view-orders.html")) {
         loadAllOrders();
         // polling
         setInterval(loadAllOrders, 10000);
@@ -67,10 +67,10 @@ document.addEventListener("DOMContentLoaded", () => {
 async function loadChefs() {
     try {
         const res = await fetch(`${API_URL}/admin/chefs`);
-        if(res.ok) {
+        if (res.ok) {
             const chefs = await res.json();
             const container = document.getElementById('chefsList');
-            if(chefs.length === 0) {
+            if (chefs.length === 0) {
                 container.innerHTML = '<p>No chefs found.</p>';
                 return;
             }
@@ -86,26 +86,26 @@ async function loadChefs() {
                 </tbody>
             </table>`;
         }
-    } catch(err) { console.error(err); }
+    } catch (err) { console.error(err); }
 }
 
 async function deleteChef(id) {
-    if(!confirm("Are you sure you want to delete this chef?")) return;
+    if (!confirm("Are you sure you want to delete this chef?")) return;
     try {
         const res = await fetch(`${API_URL}/admin/chefs/${id}`, { method: 'DELETE' });
-        if(res.ok) {
+        if (res.ok) {
             loadChefs();
         } else alert("Failed to delete chef.");
-    } catch(err) { console.error(err); }
+    } catch (err) { console.error(err); }
 }
 
 async function loadMenuAdmin() {
     try {
         const res = await fetch(`${API_URL}/menu`);
-        if(res.ok) {
+        if (res.ok) {
             const items = await res.json();
             const container = document.getElementById('menuListAdmin');
-            if(items.length === 0) {
+            if (items.length === 0) {
                 container.innerHTML = '<p>No menu items found.</p>';
                 return;
             }
@@ -122,31 +122,31 @@ async function loadMenuAdmin() {
                 </tbody>
             </table>`;
         }
-    } catch(err) { console.error(err); }
+    } catch (err) { console.error(err); }
 }
 
 async function deleteMenu(id) {
-    if(!confirm("Are you sure you want to delete this item?")) return;
+    if (!confirm("Are you sure you want to delete this item?")) return;
     try {
         const res = await fetch(`${API_URL}/menu/${id}`, { method: 'DELETE' });
-        if(res.ok) {
+        if (res.ok) {
             loadMenuAdmin();
         } else alert("Failed to delete item.");
-    } catch(err) { console.error(err); }
+    } catch (err) { console.error(err); }
 }
 
 async function loadAllOrders() {
     try {
         const res = await fetch(`${API_URL}/orders`);
-        if(res.ok) {
+        if (res.ok) {
             const orders = await res.json();
             const container = document.getElementById('allOrdersList');
-            
+
             const newDataString = JSON.stringify(orders);
             if (newDataString === window.lastAdminOrdersData) return;
             window.lastAdminOrdersData = newDataString;
 
-            if(orders.length === 0) {
+            if (orders.length === 0) {
                 container.innerHTML = '<p>No orders found.</p>';
                 return;
             }
@@ -167,5 +167,5 @@ async function loadAllOrders() {
                 </tbody>
             </table>`;
         }
-    } catch(err) { console.error(err); }
+    } catch (err) { console.error(err); }
 }

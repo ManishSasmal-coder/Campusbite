@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menu - CampusBite</title>
+    <title>Menu - CanteenAdda</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
     <nav>
-        <a href="student-dashboard.html" class="logo">CampusBite</a>
+        <a href="student-dashboard.html" class="logo">CanteenAdda</a>
         <div>
             <a href="menu.html">Menu</a>
             <a href="cart.html">Cart (<span id="cartCount">0</span>)</a>
@@ -16,7 +18,12 @@
         </div>
     </nav>
     <div class="container">
-        <h1 style="color: var(--primary-color); margin-bottom: 2rem;">Canteen Menu</h1>
+        <!-- Centered Search Bar -->
+        <div style="display: flex; justify-content: center; margin-bottom: 2.5rem; width: 100%;">
+            <input type="text" id="menuSearch" placeholder="🔍 Search menu items..."
+                style="width: 100%; max-width: 600px; padding: 1rem 1.5rem; border-radius: 50px; font-size: 1.1rem; box-shadow: 0 6px 20px rgba(0,0,0,0.08);">
+        </div>
+        <h1 style="color: var(--primary-color); margin-bottom: 2rem; text-align: center;">Canteen Menu</h1>
         <div class="grid" id="menuGrid">
             <!-- Menu Items will be injected here -->
         </div>
@@ -24,4 +31,5 @@
     <script src="js/auth.js"></script>
     <script src="js/menu.js"></script>
 </body>
+
 </html>

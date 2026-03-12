@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - CampusBite</title>
+    <title>Login - CanteenAdda</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
     <nav>
-        <a href="index.html" class="logo">CampusBite</a>
+        <a href="index.html" class="logo">CanteenAdda</a>
     </nav>
     <div class="container" style="max-width: 400px; margin-top: 5rem;">
         <div class="card">
@@ -16,12 +18,17 @@
             <form id="loginForm">
                 <input type="text" id="username" placeholder="Username" required>
                 <input type="password" id="password" placeholder="Password" required>
-                <select id="role">
-                    <option value="STUDENT">Student</option>
-                    <option value="CHEF">Chef</option>
-                    <option value="ADMIN">Admin</option>
-                </select>
-                <button type="submit" class="btn-primary">Login</button>
+                <div style="display: flex; flex-direction: column; gap: 1rem; margin-top: 1rem;">
+                    <button type="button" class="btn-primary" onclick="submitLogin('STUDENT')"
+                        style="width: 100%; border-radius: 12px; font-size: 1.1rem; padding: 1rem;">👩‍🎓 Login as
+                        Student</button>
+                    <button type="button" class="btn-primary" onclick="submitLogin('CHEF')"
+                        style="width: 100%; border-radius: 12px; font-size: 1.1rem; padding: 1rem; background: linear-gradient(135deg, #10b981 0%, #059669 100%); box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);">🧑‍🍳
+                        Login as Chef</button>
+                    <button type="button" class="btn-primary" onclick="submitLogin('ADMIN')"
+                        style="width: 100%; border-radius: 12px; font-size: 1.1rem; padding: 1rem; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);">👨‍💼
+                        Login as Admin</button>
+                </div>
             </form>
             <p style="text-align: center; margin-top: 1rem;">
                 Don't have an account? <a href="signup.html" style="color: var(--primary-color);">Sign Up</a>
@@ -30,4 +37,5 @@
     </div>
     <script src="js/auth.js"></script>
 </body>
+
 </html>

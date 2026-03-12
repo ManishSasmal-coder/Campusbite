@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Tracking - CampusBite</title>
+    <title>Order Tracking - CanteenAdda</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
         .tracker {
@@ -16,12 +17,14 @@
             border-radius: var(--border-radius);
             position: relative;
         }
+
         .step {
             text-align: center;
             flex: 1;
             position: relative;
             z-index: 1;
         }
+
         .circle {
             width: 30px;
             height: 30px;
@@ -34,17 +37,26 @@
             color: white;
             font-weight: bold;
         }
-        .step.active .circle { background: var(--primary-color); }
-        .step p { font-size: 0.9rem; font-weight: bold; }
+
+        .step.active .circle {
+            background: var(--primary-color);
+        }
+
+        .step p {
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
         .order-card {
             border-left: 5px solid var(--primary-color);
             margin-bottom: 2rem;
         }
     </style>
 </head>
+
 <body>
     <nav>
-        <a href="student-dashboard.html" class="logo">CampusBite</a>
+        <a href="student-dashboard.html" class="logo">CanteenAdda</a>
         <div>
             <a href="menu.html">Menu</a>
             <a href="cart.html">Cart (<span id="cartCount">0</span>)</a>
@@ -62,4 +74,5 @@
     <script src="js/auth.js"></script>
     <script src="js/orders.js"></script>
 </body>
+
 </html>
