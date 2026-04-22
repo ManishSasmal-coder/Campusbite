@@ -163,12 +163,54 @@ function createTrackingCard(order) {
     });
 
     let cancelButton = order.status === 'PLACED' ?
-        `<button class="btn-primary" style="background:#dc3545; margin-top: 1rem;" onclick="cancelOrder(${order.orderId})">Cancel Order</button>` : '';
+        `<button class="btn-cancel-ghost" onclick="cancelOrder(${order.orderId})">
+            <span>✖</span> Cancel Order
+        </button>` : '';
+
+    // Payment Section (Toggleable)
+    let paymentSection = (orderStatus === 'PLACED' || orderStatus === 'PREPARING' || orderStatus === 'READY') ? `
+        <button class="btn-payment" onclick="togglePaymentQR(${order.orderId})">
+            <span>💳</span> Online Payment (Scan and Pay)
+        </button>
+    ` : '';
+
+    // Action Bar Layout
+    let actionBar = (paymentSection || cancelButton) ? `
+        <div class="card-actions">
+            ${paymentSection}
+            ${cancelButton}
+        </div>
+    ` : '';
+
+    // QR Container (Appears below the Action Bar)
+    let qrContainer = (orderStatus === 'PLACED' || orderStatus === 'PREPARING' || orderStatus === 'READY') ? `
+        <div id="payment-qr-${order.orderId}" class="payment-qr-container">
+            <div class="qr-card">
+                <img src="img/payment_qr.png" alt="Payment QR Code">
+                <p style="margin-bottom: 0.5rem; font-weight: 700;">Scan to Pay via UPI</p>
+                <div class="upi-id">campusbite@upi</div>
+                <p style="font-size: 0.8rem; margin-top: 1rem; color: var(--text-muted);">
+                    Please show the payment confirmation at the counter.
+                </p>
+            </div>
+        </div>
+    ` : '';
 
     html += `
             </div>
-            ${cancelButton}
+            ${actionBar}
+            ${qrContainer}
         </div>
     `;
     return html;
 }
+
+function togglePaymentQR(orderId) {
+    const container = document.getElementById(`payment-qr-${orderId}`);
+    if (container) {
+        container.classList.toggle('active');
+    }
+}
+
+
+
