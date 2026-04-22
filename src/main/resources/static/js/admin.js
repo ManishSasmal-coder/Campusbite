@@ -1,4 +1,4 @@
-var API_URL = "http://localhost:8082/api";
+var API_URL = "/api";
 let currentEditMenuId = null;
 let currentEditChefId = null;
 

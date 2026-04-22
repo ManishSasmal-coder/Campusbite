@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function fetchAnalyticsData() {
     try {
-        const res = await fetch('http://localhost:8082/api/orders');
+        const res = await fetch('/api/orders');
         const orders = await res.json();
         
         generateMonthlySalesChart(orders);

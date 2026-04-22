@@ -1,4 +1,4 @@
-var API_URL = "http://localhost:8082/api";
+var API_URL = "/api";
 
 document.addEventListener("DOMContentLoaded", () => {
     const user = JSON.parse(localStorage.getItem('user'));

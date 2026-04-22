@@ -1,4 +1,4 @@
-var API_URL = "http://localhost:8082/api";
+var API_URL = "/api";
 let globalSettings = {
     PAYMENT_UPI: 'campusbite@upi',
     PAYMENT_QR_PATH: 'img/payment_qr.png'
