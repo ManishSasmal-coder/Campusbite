@@ -1,0 +1,11 @@
+{
+  "name": "campusbite-frontend",
+  "version": "1.0.0",
+  "description": "Frontend server for Campusbite Canteen Pre-order System",
+  "scripts": {
+    "dev": "npx serve frontend"
+  },
+  "dependencies": {
+    "serve": "^14.2.4"
+  }
+}

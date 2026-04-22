@@ -9,20 +9,67 @@
 </head>
 
 <body>
+    <style>
+        .container {
+            display: flex;
+            gap: 2rem;
+            align-items: flex-start;
+        }
+
+        .sidebar {
+            width: 250px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 100px;
+        }
+
+        .main-content {
+            flex-grow: 1;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 1rem;
+            margin-bottom: 0.8rem;
+            background: var(--secondary-color);
+            text-decoration: none;
+            color: var(--text-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--glass-shadow);
+            transition: var(--transition);
+        }
+
+        .sidebar a:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .status-text-collected { color: #10b981; }
+        .status-text-cancelled { color: #ef4444; }
+    </style>
+</head>
+
+<body>
     <nav>
         <a href="student-dashboard.html" class="logo">CanteenAdda</a>
         <div>
-            <a href="menu.html">Menu</a>
-            <a href="cart.html">Cart (<span id="cartCount">0</span>)</a>
-            <a href="order-tracking.html">Track Order</a>
-            <a href="order-history.html">History</a>
             <button onclick="logout()" class="btn-primary">Logout</button>
         </div>
     </nav>
     <div class="container">
-        <h1 style="color: var(--primary-color); margin-bottom: 2rem;">Order History</h1>
-        <div id="historyContainer">
-            <!-- Past orders injected here -->
+        <div class="sidebar">
+            <a href="student-dashboard.html">Dashboard</a>
+            <a href="menu.html">Browse Menu</a>
+            <a href="cart.html">View Cart (<span id="cartCount">0</span>)</a>
+            <a href="order-tracking.html">Track Order</a>
+            <a href="order-history.html" style="background: var(--primary-color); color: white;">Order History</a>
+        </div>
+        <div class="main-content">
+            <h1 style="color: var(--primary-color); margin-bottom: 2rem;">Order History</h1>
+            <div id="historyContainer">
+                <!-- Past orders injected here -->
+            </div>
         </div>
     </div>
     <script src="js/auth.js"></script>

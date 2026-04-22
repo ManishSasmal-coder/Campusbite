@@ -9,17 +9,61 @@
 </head>
 
 <body>
+    <style>
+        .container {
+            display: flex;
+            gap: 2rem;
+            align-items: flex-start;
+        }
+
+        .sidebar {
+            width: 250px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 100px;
+        }
+
+        .main-content {
+            flex-grow: 1;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 1rem;
+            margin-bottom: 0.8rem;
+            background: var(--secondary-color);
+            text-decoration: none;
+            color: var(--text-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--glass-shadow);
+            transition: var(--transition);
+        }
+
+        .sidebar a:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateX(5px);
+        }
+    </style>
+</head>
+
+<body>
     <nav>
         <a href="chef-dashboard.html" class="logo">CanteenAdda Chef</a>
         <div>
-            <a href="chef-orders.html" style="margin-right:20px;">Manage Orders</a>
             <button onclick="logout()" class="btn-primary">Logout</button>
         </div>
     </nav>
     <div class="container">
-        <h1 style="color: var(--primary-color); margin-bottom: 2rem;">Manage Active Orders</h1>
-        <div id="chefOrdersContainer" class="grid">
-            <!-- Orders injected here -->
+        <div class="sidebar">
+            <a href="chef-dashboard.html">Dashboard</a>
+            <a href="chef-orders.html" style="background: var(--primary-color); color: white;">Manage Orders</a>
+        </div>
+        <div class="main-content">
+            <h1 style="color: var(--primary-color); margin-bottom: 2rem;">Manage Active Orders</h1>
+            <div id="chefOrdersContainer" class="grid">
+                <!-- Orders injected here -->
+            </div>
         </div>
     </div>
     <script src="js/auth.js"></script>

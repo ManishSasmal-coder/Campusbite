@@ -9,11 +9,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const path = window.location.pathname;
-    if (path.includes("order-tracking.html")) {
+    console.log("Current path:", path);
+    // Use flexible matching for clean URLs (e.g., /order-tracking instead of /order-tracking.html)
+    if (path.includes("order-tracking")) {
+        console.log("Loading tracking for user:", user.userId);
         loadTracking(user.userId);
-        // Polling every 5 seconds
         setInterval(() => loadTracking(user.userId), 5000);
-    } else if (path.includes("order-history.html")) {
+    } else if (path.includes("order-history")) {
+        console.log("Loading history for user:", user.userId);
         loadHistory(user.userId);
     }
 });
@@ -35,6 +38,7 @@ async function loadTracking(userId) {
         const res = await fetch(`${API_URL}/orders/user/${userId}`);
         if (res.ok) {
             const orders = await res.json();
+            console.log("Fetched active user orders:", orders);
             // Filter active orders
             const activeOrders = orders.filter(o => o.status !== 'COLLECTED' && o.status !== 'CANCELLED');
 
@@ -48,9 +52,12 @@ async function loadTracking(userId) {
             }
 
             trackingContainer.innerHTML = activeOrders.map(order => createTrackingCard(order)).join('');
+        } else {
+            trackingContainer.innerHTML = `<p style="color:red; text-align:center;">Error ${res.status}: Failed to fetch active orders.</p>`;
         }
     } catch (err) {
         console.error(err);
+        trackingContainer.innerHTML = `<p style="color:red; text-align:center;">Network Error: Cannot reach backend server at ${API_URL}. Verify port 8082.</p>`;
     }
 }
 
@@ -62,6 +69,7 @@ async function loadHistory(userId) {
         const res = await fetch(`${API_URL}/orders/user/${userId}`);
         if (res.ok) {
             const orders = await res.json();
+            console.log("Fetched user history:", orders);
             const pastOrders = orders.filter(o => o.status === 'COLLECTED' || o.status === 'CANCELLED');
 
             if (pastOrders.length === 0) {
@@ -75,20 +83,23 @@ async function loadHistory(userId) {
                 return `
                 <div class="card">
                     <h3>Order #${order.orderId} ${label}</h3>
-                    <p>Total: ₹${order.totalAmount.toFixed(2)}</p>
+                    <p>Total: ₹${Number(order.totalAmount).toFixed(2)}</p>
                     <p>Status: <strong class="${statusClass}">${order.status}</strong></p>
                     <hr style="margin: 1rem 0;">
                     <ul>
-                        ${order.orderItems.map(item => `<li>${item.quantity}x ${item.item_name}</li>`).join('')}
+                        ${(order.orderItems || []).map(item => `<li>${item.quantity}x ${item.item_name || 'Item'}</li>`).join('')}
                     </ul>
                     <br>
                     <button class="btn-primary" style="background:#dc3545;" onclick="hideUserOrder(${order.orderId})">Delete</button>
                 </div>
             `;
             }).join('');
+        } else {
+            historyContainer.innerHTML = `<p style="color:red; text-align:center;">Error ${res.status}: Failed to fetch history.</p>`;
         }
     } catch (err) {
         console.error(err);
+        historyContainer.innerHTML = `<p style="color:red; text-align:center;">Network Error: Cannot reach backend server at ${API_URL}. Verify port 8082.</p>`;
     }
 }
 
@@ -128,14 +139,15 @@ async function cancelOrder(orderId) {
 
 function createTrackingCard(order) {
     const statuses = ['PLACED', 'PREPARING', 'READY'];
-    const currentIdx = statuses.indexOf(order.status);
+    const orderStatus = (order.status || 'PLACED').toUpperCase();
+    const currentIdx = statuses.indexOf(orderStatus);
 
     let html = `
         <div class="card order-card">
             <h3>Order #${order.orderId}</h3>
-            <p>Total: ₹${order.totalAmount.toFixed(2)}</p>
+            <p>Total: ₹${Number(order.totalAmount || 0).toFixed(2)}</p>
             <ul style="margin: 1rem 0 1rem 1rem;">
-                ${order.orderItems.map(item => `<li>${item.quantity}x ${item.item_name}</li>`).join('')}
+                ${(order.orderItems || []).map(item => `<li>${item.quantity}x ${item.item_name || 'Item'}</li>`).join('')}
             </ul>
             <div class="tracker">
     `;

@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const path = window.location.pathname;
 
-    if (path.includes("manage-chefs.html")) {
+    if (path.includes("manage-chefs")) {
         loadChefs();
         document.getElementById('addChefForm').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    if (path.includes("manage-menu.html")) {
+    if (path.includes("manage-menu")) {
         loadMenuAdmin();
         document.getElementById('addMenuForm').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    if (path.includes("view-orders.html")) {
+    if (path.includes("view-orders")) {
         loadAllOrders();
         // polling
         setInterval(loadAllOrders, 10000);
@@ -69,6 +69,7 @@ async function loadChefs() {
         const res = await fetch(`${API_URL}/admin/chefs`);
         if (res.ok) {
             const chefs = await res.json();
+            console.log("Fetched chefs:", chefs);
             const container = document.getElementById('chefsList');
             if (chefs.length === 0) {
                 container.innerHTML = '<p>No chefs found.</p>';
@@ -115,7 +116,7 @@ async function loadMenuAdmin() {
                     ${items.map(m => `<tr>
                         <td>${m.menuItemId}</td>
                         <td>${m.name}</td>
-                        <td>$${m.price.toFixed(2)}</td>
+                        <td>₹${Number(m.price).toFixed(2)}</td>
                         <td>${m.type}</td>
                         <td><button class="btn-primary" style="background:#dc3545;" onclick="deleteMenu(${m.menuItemId})">Delete</button></td>
                     </tr>`).join('')}
@@ -156,11 +157,11 @@ async function loadAllOrders() {
                     ${orders.map(o => `<tr>
                         <td>${o.orderId}</td>
                         <td>${o.user ? o.user.username : 'Unknown'}</td>
-                        <td>$${o.totalAmount.toFixed(2)}</td>
+                        <td>₹${Number(o.totalAmount).toFixed(2)}</td>
                         <td><strong style="color:var(--primary-color)">${o.status}</strong></td>
                         <td>
                             <ul style="margin-left: 1rem;">
-                                ${o.orderItems.map(i => `<li>${i.quantity}x ${i.item_name}</li>`).join('')}
+                                ${(o.orderItems || []).map(i => `<li>${i.quantity}x ${i.item_name || 'Item'}</li>`).join('')}
                             </ul>
                         </td>
                     </tr>`).join('')}

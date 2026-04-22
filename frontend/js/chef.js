@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const path = window.location.pathname;
-    if (path.includes("chef-orders.html")) {
+    if (path.includes("chef-orders")) {
         loadChefOrders(user.userId);
         // Polling every 5 seconds
         setInterval(() => loadChefOrders(user.userId), 5000);
@@ -23,6 +23,7 @@ async function loadChefOrders(chefId) {
         const res = await fetch(`${API_URL}/orders/chef/${chefId}`);
         if (res.ok) {
             const orders = await res.json();
+            console.log("Fetched chef orders:", orders);
             const activeOrders = orders.filter(o => o.status !== 'COLLECTED');
 
             const newDataString = JSON.stringify(activeOrders);
@@ -70,7 +71,7 @@ async function loadChefOrders(chefId) {
                         <p>Status: <strong class="${statusClass}" id="order-status-${order.orderId}">${order.status}</strong></p>
                         <hr style="margin: 1rem 0;">
                         <ul style="margin-left: 1rem; margin-bottom: 1rem;">
-                            ${order.orderItems.map(item => `<li>${item.quantity}x ${item.item_name}</li>`).join('')}
+                            ${(order.orderItems || []).map(item => `<li>${item.quantity}x ${item.item_name || 'Item'}</li>`).join('')}
                         </ul>
                         <div style="display:flex; flex-direction:column; gap:0.5rem;" id="cb-group-${order.orderId}">
                             <label><input type="checkbox" id="cb-prep-${order.orderId}" ${isPreparing ? 'checked disabled' : ''} onchange="updateStatus(${order.orderId}, 'PREPARING')"> Preparing</label>

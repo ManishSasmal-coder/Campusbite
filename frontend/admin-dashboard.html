@@ -7,31 +7,58 @@
     <title>Admin Dashboard - CanteenAdda</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
+        .container {
+            display: flex;
+            gap: 2rem;
+            align-items: flex-start;
+        }
+
         .sidebar {
-            float: left;
-            width: 22%;
-            padding-right: 2rem;
+            width: 280px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 100px;
         }
 
         .main-content {
-            float: left;
-            width: 78%;
+            flex-grow: 1;
         }
 
         .sidebar a {
             display: block;
             padding: 1rem;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.8rem;
             background: var(--secondary-color);
             text-decoration: none;
             color: var(--text-color);
             border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
+            box-shadow: var(--glass-shadow);
+            transition: var(--transition);
         }
 
         .sidebar a:hover {
             background: var(--primary-color);
             color: white;
+            transform: translateX(5px);
+        }
+
+        @media (max-width: 992px) {
+            .container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                position: static;
+                display: flex;
+                flex-direction: row;
+                overflow-x: auto;
+                padding-bottom: 1rem;
+                gap: 1rem;
+            }
+            .sidebar a {
+                white-space: nowrap;
+                margin-bottom: 0;
+            }
         }
     </style>
 </head>

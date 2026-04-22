@@ -7,31 +7,39 @@
     <title>View All Orders - CanteenAdda</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
+        .container {
+            display: flex;
+            gap: 2rem;
+            align-items: flex-start;
+        }
+
         .sidebar {
-            float: left;
-            width: 22%;
-            padding-right: 2rem;
+            width: 280px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 100px;
         }
 
         .main-content {
-            float: left;
-            width: 78%;
+            flex-grow: 1;
         }
 
         .sidebar a {
             display: block;
             padding: 1rem;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.8rem;
             background: var(--secondary-color);
             text-decoration: none;
             color: var(--text-color);
             border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
+            box-shadow: var(--glass-shadow);
+            transition: var(--transition);
         }
 
         .sidebar a:hover {
             background: var(--primary-color);
             color: white;
+            transform: translateX(5px);
         }
 
         table {
@@ -63,6 +71,7 @@
             <a href="manage-chefs.html">Manage Chefs</a>
             <a href="manage-menu.html">Manage Menu</a>
             <a href="view-orders.html" style="background: var(--primary-color); color: white;">View All Orders</a>
+            <a href="admin-analytics.html">Analytics Report</a>
         </div>
         <div class="main-content">
             <h1 style="color: var(--primary-color); margin-bottom: 2rem;">All System Orders</h1>
