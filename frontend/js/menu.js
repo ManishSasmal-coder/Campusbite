@@ -60,9 +60,10 @@ function renderMenu(itemsToRender) {
             <div class="menu-card">
                 <img src="${item.imageUrl}" alt="${item.name}">
                 <div class="menu-card-body">
-                    <h3 style="display: flex; align-items: center; justify-content: space-between;">
-                        <span><span class="diet-badge ${dietBadgeClass}" title="${item.type}"></span> ${item.name}</span>
-                    </h3>
+                    <div style="display: flex; justify-content: space-between; align-items: start;">
+                        <h3 class="item-name"><span class="diet-badge ${dietBadgeClass}" title="${item.type}"></span> ${item.name}</h3>
+                        <span class="prep-time" style="font-size: 0.8rem; background: var(--secondary-color); color: var(--primary-color); padding: 2px 8px; border-radius: 12px; font-weight: 600;">⏱️ ${item.preparationTime || 5}m</span>
+                    </div>
                     <div class="rating-badge">
                         ⭐ ${rating} <span class="review-count">(${count} reviews)</span>
                         ${count > 0 ? `<span class="view-reviews-link" onclick="viewReviews(${item.menuItemId}, '${item.name.replace(/'/g, "\\'")}')">View all</span>` : ''}

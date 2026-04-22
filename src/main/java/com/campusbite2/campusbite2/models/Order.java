@@ -44,6 +44,9 @@ public class Order {
     @Column(columnDefinition = "boolean default false")
     private Boolean deletedByUser = false;
 
+    private LocalDateTime preparationStartedAt;
+    private Integer totalEstimatedTime; // Max of all items in minutes
+
     // Many orders by one user
     @ManyToOne
     @JoinColumn(name = "user_id")

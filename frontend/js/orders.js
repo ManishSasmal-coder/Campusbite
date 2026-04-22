@@ -171,6 +171,14 @@ function createTrackingCard(order) {
             <ul style="margin: 1rem 0 1rem 1rem;">
                 ${(order.orderItems || []).map(item => `<li>${item.quantity}x ${item.item_name || 'Item'}</li>`).join('')}
             </ul>
+            ${orderStatus === 'PREPARING' ? `
+                <div class="prep-timer-box" id="timer-${order.orderId}" 
+                     data-start="${order.preparationStartedAt}" 
+                     data-duration="${order.totalEstimatedTime}">
+                    <div class="timer-spinner"></div>
+                    <span class="timer-text">Initializing timer...</span>
+                </div>
+            ` : ''}
             <div class="tracker">
     `;
 
@@ -226,6 +234,34 @@ function createTrackingCard(order) {
     `;
     return html;
 }
+
+// Global Timer Update Loop
+setInterval(() => {
+    const timerBoxes = document.querySelectorAll('.prep-timer-box');
+    timerBoxes.forEach(box => {
+        const startStr = box.getAttribute('data-start');
+        const durationMins = parseInt(box.getAttribute('data-duration'));
+        const textEl = box.querySelector('.timer-text');
+        
+        if (!startStr || isNaN(durationMins)) return;
+
+        const startTime = new Date(startStr).getTime();
+        const now = new Date().getTime();
+        const elapsedSecs = Math.floor((now - startTime) / 1000);
+        const totalSecs = durationMins * 60;
+        const remainingSecs = totalSecs - elapsedSecs;
+
+        if (remainingSecs > 0) {
+            const m = Math.floor(remainingSecs / 60);
+            const s = remainingSecs % 60;
+            textEl.innerHTML = `Estimated ready in: <strong>${m}m ${s}s</strong>`;
+            box.classList.remove('delayed');
+        } else {
+            textEl.innerHTML = `<span style="color: #ef4444;">⚠️ Sorry for the delay! Your order is taking a bit longer but will be ready shortly!</span>`;
+            box.classList.add('delayed');
+        }
+    });
+}, 1000);
 
 function togglePaymentQR(orderId) {
     const container = document.getElementById(`payment-qr-${orderId}`);

@@ -37,6 +37,18 @@ public class AdminController {
         return ResponseEntity.ok(saved);
     }
 
+    @PutMapping("/chefs/{id}")
+    public ResponseEntity<Chef> updateChef(@PathVariable Long id, @RequestBody Chef updatedChef) {
+        return chefRepo.findById(id).map(existing -> {
+            existing.setUsername(updatedChef.getUsername());
+            existing.setFullName(updatedChef.getFullName());
+            if (updatedChef.getPassword() != null && !updatedChef.getPassword().isEmpty()) {
+                existing.setPassword(updatedChef.getPassword());
+            }
+            return ResponseEntity.ok(chefRepo.save(existing));
+        }).orElse(ResponseEntity.notFound().build());
+    }
+
     @DeleteMapping("/chefs/{id}")
     public ResponseEntity<?> deleteChef(@PathVariable Long id) {
         if(chefRepo.existsById(id)) {

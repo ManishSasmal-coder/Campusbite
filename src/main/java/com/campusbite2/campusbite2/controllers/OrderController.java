@@ -115,7 +115,22 @@ public class OrderController {
             if ("CANCELLED".equalsIgnoreCase(request.getStatus()) && !"PLACED".equals(order.getStatus())) {
                 return ResponseEntity.badRequest().body("Cannot cancel after preparation started.");
             }
-            order.setStatus(request.getStatus().toUpperCase());
+            String newStatus = request.getStatus().toUpperCase();
+            order.setStatus(newStatus);
+            
+            if ("PREPARING".equals(newStatus)) {
+                order.setPreparationStartedAt(java.time.LocalDateTime.now());
+                int maxTime = 0;
+                if (order.getOrderItems() != null) {
+                    for (OrderItem item : order.getOrderItems()) {
+                        if (item.getMenuItem() != null && item.getMenuItem().getPreparationTime() != null) {
+                            maxTime = Math.max(maxTime, item.getMenuItem().getPreparationTime());
+                        }
+                    }
+                }
+                order.setTotalEstimatedTime(maxTime);
+            }
+
             if (request.getChefId() != null) {
                 chefRepo.findById(request.getChefId()).ifPresent(order::setChef);
             }

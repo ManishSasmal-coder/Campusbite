@@ -29,6 +29,9 @@ public class MenuItem {
     @Column(nullable= false)
     private String imageUrl;
 
+    @Column(nullable = false)
+    private Integer preparationTime = 0; // In minutes
+
     @ManyToOne
     @JoinColumn(name = "section_id")
     private Section section;

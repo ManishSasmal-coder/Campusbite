@@ -955,6 +955,42 @@ label input[type="checkbox"]:disabled {
     border-bottom: none;
 }
 
+.prep-timer-box {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1rem;
+    margin: 1rem 0;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: var(--transition);
+}
+
+.prep-timer-box.delayed {
+    background: #fff5f5;
+    border-color: #feb2b2;
+}
+
+.timer-spinner {
+    width: 20px;
+    height: 20px;
+    border: 3px solid var(--secondary-color);
+    border-top: 3px solid var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.timer-text {
+    font-size: 0.95rem;
+    color: #475569;
+}
+
 .review-header {
     display: flex;
     justify-content: space-between;
