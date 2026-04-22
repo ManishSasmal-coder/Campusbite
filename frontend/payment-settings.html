@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Settings - CanteenAdda Admin</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .container {
+            display: flex;
+            gap: 2rem;
+            align-items: flex-start;
+        }
+
+        .sidebar {
+            width: 280px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 100px;
+        }
+
+        .main-content {
+            flex-grow: 1;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 1rem;
+            margin-bottom: 0.8rem;
+            background: var(--secondary-color);
+            text-decoration: none;
+            color: var(--text-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--glass-shadow);
+            transition: var(--transition);
+        }
+
+        .sidebar a:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        @media (max-width: 992px) {
+            .container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                position: static;
+                display: flex;
+                flex-direction: row;
+                overflow-x: auto;
+                padding-bottom: 1rem;
+                gap: 1rem;
+            }
+            .sidebar a {
+                white-space: nowrap;
+                margin-bottom: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="admin-dashboard.html" class="logo">CanteenAdda Admin</a>
+        <div>
+            <span id="adminNameDisplay" style="margin-right: 15px;"></span>
+            <button onclick="logout()" class="btn-primary">Logout</button>
+        </div>
+    </nav>
+
+    <div class="container" style="max-width: 1200px; margin: 2rem auto; padding: 0 1rem;">
+        <div class="sidebar">
+            <a href="admin-dashboard.html">Dashboard</a>
+            <a href="manage-chefs.html">Manage Chefs</a>
+            <a href="manage-menu.html">Manage Menu</a>
+            <a href="view-orders.html">View All Orders</a>
+            <a href="admin-analytics.html">Analytics Report</a>
+            <a href="payment-settings.html" style="background: var(--primary-color); color: white;">Payment Settings</a>
+        </div>
+
+        <div class="main-content">
+            <h1 style="color: var(--primary-color); margin-bottom: 2rem;">Payment Settings</h1>
+            
+            <div class="grid">
+                <!-- UPI Settings -->
+                <div class="card">
+                    <h3>UPI Details</h3>
+                    <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Update the UPI ID displayed to students during payment.</p>
+                    <div style="margin-bottom: 1.5rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">UPI ID</label>
+                        <input type="text" id="upiIdInput" class="form-control" style="width: 100%; border: 1px solid #ddd; padding: 0.8rem; border-radius: 8px;" placeholder="e.g. name@bank">
+                    </div>
+                    <button id="saveUpiBtn" class="btn-primary" style="width: 100%;">Save UPI ID</button>
+                </div>
+
+                <!-- QR Code Upload -->
+                <div class="card">
+                    <h3>QR Code Image</h3>
+                    <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Upload a new QR code image from your computer.</p>
+                    
+                    <div style="text-align: center; margin-bottom: 1.5rem; background: #f8fafc; padding: 1rem; border-radius: 12px; border: 1px dashed #cbd5e1;">
+                        <p id="previewLabel" style="font-size: 0.8rem; color: #64748b; margin-bottom: 1rem; font-weight: 600;">Current QR Preview</p>
+                        <img id="qrPreview" src="img/payment_qr.png" style="max-width: 200px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); background: white; padding: 10px;">
+                    </div>
+
+                    <div style="margin-bottom: 1.5rem;">
+                        <input type="file" id="qrFileInput" accept="image/*" style="width: 100%; font-size: 0.9rem; color: #475569;">
+                    </div>
+                    <button id="uploadQrBtn" class="btn-primary" style="width: 100%;">Upload New QR</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script>
+        const API_BASE = "http://localhost:8082/api";
+        const upiInput = document.getElementById('upiIdInput');
+        const qrPreview = document.getElementById('qrPreview');
+        const qrFileInput = document.getElementById('qrFileInput');
+        const previewLabel = document.getElementById('previewLabel');
+
+        // Load current settings
+        async function loadSettings() {
+            try {
+                const res = await fetch(`${API_BASE}/settings`);
+                const data = await res.json();
+                if (data.PAYMENT_UPI) upiInput.value = data.PAYMENT_UPI;
+                if (data.PAYMENT_QR_PATH) {
+                    const path = data.PAYMENT_QR_PATH;
+                    // Ensure the path is correctly formatted
+                    if (path.startsWith('http')) {
+                        qrPreview.src = path;
+                    } else if (path.startsWith('uploads/')) {
+                        qrPreview.src = `http://localhost:8082/${path}`;
+                    } else if (path.startsWith('img/')) {
+                        qrPreview.src = path; // Local static fallback
+                    } else {
+                        qrPreview.src = `http://localhost:8082/${path}`;
+                    }
+                }
+            } catch (err) {
+                console.error('Failed to load settings', err);
+            }
+        }
+
+        // Live Preview logic
+        qrFileInput.onchange = (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    qrPreview.src = event.target.result;
+                    previewLabel.innerText = "New QR Preview (Not Saved)";
+                    previewLabel.style.color = "#f97316"; // Orange to indicate not saved
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+
+        // Save UPI
+        document.getElementById('saveUpiBtn').onclick = async () => {
+            const upi = upiInput.value.trim();
+            if(!upi) return alert('Please enter a UPI ID');
+
+            try {
+                const res = await fetch(`${API_BASE}/settings/update`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ "PAYMENT_UPI": upi })
+                });
+                if(res.ok) alert('UPI ID updated successfully!');
+            } catch (err) {
+                alert('Failed to update UPI');
+            }
+        };
+
+        // Upload QR
+        document.getElementById('uploadQrBtn').onclick = async () => {
+            const file = qrFileInput.files[0];
+            if(!file) return alert('Please select a file first');
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const res = await fetch(`${API_BASE}/settings/upload-qr`, {
+                    method: 'POST',
+                    body: formData
+                });
+                if(res.ok) {
+                    const data = await res.json();
+                    qrPreview.src = `http://localhost:8082/${data.path}`;
+                    previewLabel.innerText = "Current QR Preview";
+                    previewLabel.style.color = "#64748b";
+                    alert('QR Code uploaded successfully!');
+                } else {
+                    alert('Upload failed');
+                }
+            } catch (err) {
+                alert('Error uploading file');
+            }
+        };
+
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (!user || user.role !== 'ADMIN') {
+            window.location.href = 'admin-login.html';
+        } else {
+            document.getElementById('adminNameDisplay').innerText = `Admin: ${user.username}`;
+            loadSettings();
+        }
+    </script>
+</body>
+</html>

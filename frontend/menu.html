@@ -28,6 +28,20 @@
             <!-- Menu Items will be injected here -->
         </div>
     </div>
+    <!-- Review Display Modal -->
+    <div id="reviewModal" class="modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h2 id="reviewModalTitle" style="color: var(--primary-color);">Reviews</h2>
+                <button onclick="closeReviewModal()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-muted);">✖</button>
+            </div>
+            
+            <div id="reviewsList" style="max-height: 400px; overflow-y: auto; padding-right: 10px;">
+                <!-- Reviews injected here -->
+            </div>
+        </div>
+    </div>
+
     <script src="js/auth.js"></script>
     <script src="js/menu.js"></script>
 </body>

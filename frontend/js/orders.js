@@ -1,4 +1,22 @@
 var API_URL = "http://localhost:8082/api";
+let globalSettings = {
+    PAYMENT_UPI: 'campusbite@upi',
+    PAYMENT_QR_PATH: 'img/payment_qr.png'
+};
+
+async function fetchGlobalSettings() {
+    try {
+        const res = await fetch(`${API_URL}/settings`);
+        if (res.ok) {
+            const data = await res.json();
+            globalSettings = { ...globalSettings, ...data };
+        }
+    } catch (err) {
+        console.error('Failed to fetch settings', err);
+    }
+}
+fetchGlobalSettings();
+
 
 document.addEventListener("DOMContentLoaded", () => {
     updateCartCount();
@@ -87,7 +105,11 @@ async function loadHistory(userId) {
                     <p>Status: <strong class="${statusClass}">${order.status}</strong></p>
                     <hr style="margin: 1rem 0;">
                     <ul>
-                        ${(order.orderItems || []).map(item => `<li>${item.quantity}x ${item.item_name || 'Item'}</li>`).join('')}
+                        ${(order.orderItems || []).map(item => {
+                            let rateBtn = (order.status === 'COLLECTED' && item.menuItem) ? 
+                                `<button class="btn-primary" style="padding: 0.2rem 0.6rem; font-size: 0.8rem; margin-left: 1rem; background: #f59e0b;" onclick="openFeedbackModal(${item.menuItem.menuItemId}, ${order.orderId}, '${item.menuItem.name.replace(/'/g, "\\'")}')">⭐ Rate</button>` : '';
+                            return `<li>${item.quantity}x ${item.item_name || 'Item'} ${rateBtn}</li>`;
+                        }).join('')}
                     </ul>
                     <br>
                     <button class="btn-primary" style="background:#dc3545;" onclick="hideUserOrder(${order.orderId})">Delete</button>
@@ -186,9 +208,9 @@ function createTrackingCard(order) {
     let qrContainer = (orderStatus === 'PLACED' || orderStatus === 'PREPARING' || orderStatus === 'READY') ? `
         <div id="payment-qr-${order.orderId}" class="payment-qr-container">
             <div class="qr-card">
-                <img src="img/payment_qr.png" alt="Payment QR Code">
+                <img src="${globalSettings.PAYMENT_QR_PATH.startsWith('http') || globalSettings.PAYMENT_QR_PATH.startsWith('img/') ? globalSettings.PAYMENT_QR_PATH : `http://localhost:8082/${globalSettings.PAYMENT_QR_PATH}`}" alt="Payment QR Code">
                 <p style="margin-bottom: 0.5rem; font-weight: 700;">Scan to Pay via UPI</p>
-                <div class="upi-id">campusbite@upi</div>
+                <div class="upi-id">${globalSettings.PAYMENT_UPI}</div>
                 <p style="font-size: 0.8rem; margin-top: 1rem; color: var(--text-muted);">
                     Please show the payment confirmation at the counter.
                 </p>
@@ -211,6 +233,72 @@ function togglePaymentQR(orderId) {
         container.classList.toggle('active');
     }
 }
+
+function openFeedbackModal(menuItemId, orderId, itemName) {
+    const modal = document.getElementById('feedbackModal');
+    if (modal) {
+        document.getElementById('modalMenuItemId').value = menuItemId;
+        document.getElementById('modalOrderId').value = orderId;
+        modal.querySelector('h2').innerText = `How was your ${itemName}?`;
+        modal.classList.add('active');
+    }
+}
+
+function closeFeedbackModal() {
+    const modal = document.getElementById('feedbackModal');
+    if (modal) {
+        modal.classList.remove('active');
+        document.getElementById('feedbackForm').reset();
+    }
+}
+
+// Handle Feedback Submission
+document.addEventListener('DOMContentLoaded', () => {
+    const feedbackForm = document.getElementById('feedbackForm');
+    if (feedbackForm) {
+        feedbackForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const user = JSON.parse(localStorage.getItem('user'));
+            const menuItemId = document.getElementById('modalMenuItemId').value;
+            const ratingInput = feedbackForm.querySelector('input[name="rating"]:checked');
+            
+            if (!ratingInput) {
+                alert('Please select a star rating.');
+                return;
+            }
+            
+            const rating = ratingInput.value;
+            const comment = document.getElementById('feedbackComment').value;
+
+            const payload = {
+                userId: user.userId,
+                menuItemId: menuItemId,
+                rating: rating,
+                comment: comment
+            };
+
+            try {
+                const res = await fetch(`${API_URL}/reviews`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (res.ok) {
+                    alert('Thank you for your feedback!');
+                    closeFeedbackModal();
+                    loadHistory(user.userId);
+                } else {
+                    const errorText = await res.text();
+                    alert('Failed to submit review: ' + errorText);
+                }
+            } catch (err) {
+                console.error('Feedback Error:', err);
+                alert('Submission Error: ' + err.message);
+            }
+        });
+    }
+});
 
 
 
