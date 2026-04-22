@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics Report - CanteenAdda</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .sidebar {
+            float: left;
+            width: 22%;
+            padding-right: 2rem;
+        }
+        .main-content {
+            float: left;
+            width: 78%;
+        }
+        .sidebar a {
+            display: block;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            background: var(--secondary-color);
+            text-decoration: none;
+            color: var(--text-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+        .sidebar a:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+        .chart-container {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            text-align: center;
+            height: 400px;
+            position: relative;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        canvas {
+            max-height: 100%;
+            width: 100% !important;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="admin-dashboard.html" class="logo">CanteenAdda Admin</a>
+        <div>
+            <span id="adminNameDisplay" style="margin-right: 15px;"></span>
+            <button onclick="logout()" class="btn-primary">Logout</button>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="sidebar">
+            <a href="admin-dashboard.html">Dashboard</a>
+            <a href="manage-chefs.html">Manage Chefs</a>
+            <a href="manage-menu.html">Manage Menu</a>
+            <a href="view-orders.html">View All Orders</a>
+            <a href="admin-analytics.html" style="background: var(--primary-color); color: white;">Analytics Report</a>
+        </div>
+        <div class="main-content">
+            <h1 style="color: var(--primary-color); margin-bottom: 2rem;">Analytics Report</h1>
+            
+            <div class="chart-container">
+                <canvas id="monthlySalesChart"></canvas>
+            </div>
+            
+            <div class="chart-container">
+                <canvas id="topItemsChart"></canvas>
+            </div>
+            
+            <div class="chart-container">
+                <canvas id="statusDistributionChart" style="max-width: 400px;"></canvas>
+            </div>
+        </div>
+    </div>
+    <script src="js/auth.js"></script>
+    <script src="js/admin-analytics.js"></script>
+</body>
+</html>
